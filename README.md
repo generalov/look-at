@@ -9,13 +9,19 @@ Installation
 
 Install [`wmctrl`][wmctrl] then run:
 
-    easy_install look-at
+    $ easy_install look-at
+
+Ubuntu users could try ppa:
+
+    $ sudo apt-add-repository ppa:e15/ppa
+    $ sudo apt-get update
+    $ sudo apt-get install look-at
 
 
 Usage
 -----
 
-    look-at <application>
+    $ look-at <application>
 
 
 Use cases
@@ -40,9 +46,15 @@ application:
     "look-at thunderbird"
         Mod4 + 4
 
+and reload settings:
+
+    $ killall -HUP xbindkeys
+
 
 Details
 -------
+
+Development of `look-at` happens on Github: http://github.com/generalov/look-at
 
 It uses [`wmctrl`][wmctrl] tool to interact with a EWMH/NetWM compatible X
 Window Manager.
