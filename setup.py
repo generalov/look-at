@@ -11,6 +11,7 @@ setup_data = {
         'license': 'BSD',
         'packages': [
             'look_at',
+            'look_at.scripts',
             ],
         'platforms': "All",
         'classifiers': [
