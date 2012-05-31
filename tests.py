@@ -31,6 +31,7 @@ from flexmock import flexmock
 
 from look_at import wmctrl
 from look_at.wmctrl import WmCtrl
+from look_at.focus import Focus
 
 
 class WmCtrlListWindowsTest(unittest.TestCase):
@@ -48,6 +49,14 @@ class WmCtrlListWindowsTest(unittest.TestCase):
                 )
         self.assertEquals(1, len(WmCtrl().list_windows()))
 
+
+class FocusSkipNautilusDesktopTest(unittest.TestCase):
+    def test_normal_list(self):
+        flexmock(wmctrl).should_receive('getoutput').with_args(str).and_return(
+                '0x01a00004  0 2416   0    0    1680 1050 desktop_window.Nautilus  bunca Desktop\n'
+                '0x01a04364  0 2416   1730 48   884  516  nautilus.Nautilus     bunca Documents\n'
+                )
+        self.assertEquals(1, len(Focus(WmCtrl(), dict()).get_candidate_windows('nautilus')))
 
 def runtests():
     suite = unittest.TestLoader().loadTestsFromName(__name__)

@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup_data = {
         'name': 'look-at',
-        'version': '1.0',
+        'version': '1.1',
         'description': "Command line window focus switcher",
         'long_description': open('README.md', 'r').read(),
         'license': 'BSD',
@@ -29,6 +29,7 @@ setup_data = {
                 ],
             },
         'zip_safe': True,
+        'test_suite': "tests.runtests",
         }
 
 setup(**setup_data)

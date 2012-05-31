@@ -37,8 +37,9 @@ class Focus(object):
 
     def get_candidate_windows(self, program_name):
         return [w.id for w in self.wmctrl.list_windows()
-                      if re.search(program_name, w.wm_class.lower())
-                      or re.search(program_name, w.wm_name.lower())
+                      if (re.search(program_name, w.wm_class.lower())
+                      or re.search(program_name, w.wm_name.lower()))
+                      and 'desktop_window' not in w.wm_class
                       ]
 
     def activate(self, program_name, window_id):
