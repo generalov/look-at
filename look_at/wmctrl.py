@@ -31,14 +31,16 @@
 # writen by Antonio Cuni <anto.cuni@gmail.com>
 
 import os
-from commands import getoutput
-try:
-    from collections import namedtuple
-except ImportError:
-    from namedtuple import namedtuple
+import subprocess
 
 
-BaseWindow = namedtuple('Window', 'id desktop pid x y w h wm_class host wm_name window_role')
+def getoutput(cmdline):
+    process = subprocess.Popen(cmdline.split(), stdout=subprocess.PIPE)
+    output, unused_err = process.communicate()
+    retcode = process.poll()
+    if retcode:
+        raise subprocess.CalledProcessError(retcode, cmdline, output=output)
+    return output
 
 
 class WmCtrl(object):
@@ -47,11 +49,10 @@ class WmCtrl(object):
         out = getoutput('wmctrl -l -G -p -x')
         windows = []
         for line in out.splitlines():
-            parts = line.split(None, len(Window._fields)-2)
-            parts = map(str.strip, parts)
-            parts[1:7] = map(int, parts[1:7])
-            parts.append(None)
-            windows.append(Window(*parts))
+            try:
+                windows.append(Window.fromstring(line))
+            except Exception:
+                pass
         return windows
 
     def get_window_by_id(self, win_id):
@@ -78,7 +79,27 @@ class CachedWmCtrl(WmCtrl):
         return self._list_windows_cache
 
 
-class Window(BaseWindow):
+class Window(object):
+
+    def __init__(self, win_id, desktop, pid, x, y, w, h, wm_class, host, wm_name, window_role=None):
+        self.id = win_id
+        self.desktop = desktop
+        self.pid = pid
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.wm_class = wm_class
+        self.host = host
+        self.wm_name = wm_name
+        self.window_role = window_role
+
+    @classmethod
+    def fromstring(self, line):
+        parts = line.split(None, 9)
+        parts = [x.strip() for x in parts]
+        parts[1:7] = [int(x) for x in parts[1:7]]
+        return Window(*parts)
 
     @property
     def wm_window_role(self):
