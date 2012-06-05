@@ -49,6 +49,19 @@ class WmCtrlListWindowsTest(unittest.TestCase):
                 )
         self.assertEquals(1, len(WmCtrl().list_windows()))
 
+    def test_get_active_window_compiz(self):
+        flexmock(wmctrl).should_receive('getoutput').with_args("xprop -root _NET_ACTIVE_WINDOW").and_return(
+                '_NET_ACTIVE_WINDOW(WINDOW): window id # 0x3200006\n'
+                )
+        self.assertEquals('0x3200006', WmCtrl().get_active_window_id())
+
+    def test_get_active_window_xfce4(self):
+        flexmock(wmctrl).should_receive('getoutput').with_args("xprop -root _NET_ACTIVE_WINDOW").and_return(
+                '_NET_ACTIVE_WINDOW(WINDOW): window id # 0x3200039, 0x0\n'
+                )
+        self.assertEquals('0x3200039', WmCtrl().get_active_window_id())
+
+
 
 class FocusSkipNautilusDesktopTest(unittest.TestCase):
     def test_normal_list(self):

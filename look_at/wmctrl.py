@@ -62,13 +62,15 @@ class WmCtrl(object):
         return lst[0] if lst else None
 
     def get_active_window(self):
+        return self.get_window_by_id(self.get_active_window_id())
+
+    def get_active_window_id(self):
         out = getoutput("xprop -root _NET_ACTIVE_WINDOW")
-        parts = out.split()
         try:
-            win_id = parts[-1]
+            win_id = out.split('#')[-1].split(',')[0].strip()
         except ValueError:
             return None
-        return self.get_window_by_id(win_id)
+        return win_id
 
 
 class CachedWmCtrl(WmCtrl):
